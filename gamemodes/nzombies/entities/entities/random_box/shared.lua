@@ -115,7 +115,7 @@ function ENT:SpawnWeapon(activator, class)
 	wep.Box = self
 	self.WindupEnt = wep
 	--wep:SetAngles( self:GetAngles() )
-	self:EmitSound("nz/randombox/random_box_jingle.wav")
+	self:EmitSound("nzu/mysterybox/music_box.wav")
 
 	return wep
 end
