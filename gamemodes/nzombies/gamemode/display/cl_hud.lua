@@ -109,7 +109,7 @@ local function ScoreHud()
 						else
 							surface.SetDrawColor(200,200,200)
 						end
-						surface.DrawTexturedRect(ScrW() - textW - 180, ScrH() - 275 * scale - offset, (textW + 150)*hpscale, 45)
+						surface.DrawTexturedRectUV(ScrW() - textW - 180, ScrH() - 275 * scale - offset, (textW + 150)*hpscale, 45, 0, 0, hpscale, 1)
 					end
 				else
 					surface.SetDrawColor(200,200,200)
