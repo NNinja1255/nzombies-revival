@@ -191,6 +191,7 @@ function nzRound:Prepare( time )
 	else
 		local normalSpawner = Spawner("nz_spawn_zombie_normal", {["nz_zombie_walker"] = {chance = 100}}, self:GetZombiesMax())
 
+		--[[
 		-- after round 20 spawn some hellhounds aswell (half of the round number 21: 10, 22: 11, 23: 11, 24: 12 ...)
 		if self:GetNumber() > 20 then
 			local amount = math.floor(self:GetNumber() / 2)
@@ -199,6 +200,7 @@ function nzRound:Prepare( time )
 			self:SetSpecialSpawner(specialSpawner)
 			self:SetZombiesMax(self:GetZombiesMax() + amount)
 		end
+		]]
 
 		-- save the spawner to access data
 		self:SetNormalSpawner(normalSpawner)
