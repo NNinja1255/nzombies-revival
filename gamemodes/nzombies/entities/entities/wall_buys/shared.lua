@@ -222,38 +222,32 @@ if SERVER then
 		activator.nextUseTime = CurTime() + 1
 		local price = self.Price
 		
-		local wep
-		for k,v in pairs(activator:GetWeapons()) do
-			if v:GetClass() == self.WeaponGive then wep = v break end
-		end
-		if !wep then wep = weapons.Get(self.WeaponGive) end
-		if !wep then return end
-		local ammo_type = IsValid(wep) and wep:GetPrimaryAmmoType() or wep.Primary.Ammo
-		if wep.NZSpecialCategory != nil then
-			ammo_type = GetNZAmmoID(wep.NZSpecialCategory)
-		end
-
-		local ammo_price = math.ceil((price - (price % 10))/2)
-		local ammo_price_pap = 4500
-		local curr_ammo = activator:GetAmmoCount( ammo_type )
-		local give_ammo = nzWeps:CalculateMaxAmmo(self.WeaponGive) - curr_ammo
-		if wep.NZSpecialWeaponData != nil then
-			give_ammo = wep.NZSpecialWeaponData.MaxAmmo - curr_ammo
-		end
-
-		if (wep.NZSpecialCategory == "grenade") then 
-			local nade = activator:GetSpecialWeaponFromCategory("grenade")
-			if activator:HasPerk("widowswine") then
-				ammo_price = 4000
+		local hasWep = false
+		local hasPap = false
+		local hasReplacement = false
+		
+		local wep = activator:GetWeapon(self.WeaponGive)
+		
+		if IsValid(wep) then
+			hasWep = true
+		else
+			wep = weapons.Get(self.WeaponGive)
+			if !wep then
+				error("Wall Buy ["..self:EntIndex().."] has invalid weapon ("..self.WeaponGive..").") 
+				return
 			end
 		end
 		
-		--print(ammo_type, curr_ammo, give_ammo)
-
-		local replacementWep = nil
-		local hasReplacement = false
-
-		if !activator:HasWeapon( self.WeaponGive ) and !hasReplacement then
+		local replacementName = wep.NZPaPReplacement
+		
+		if hasWep then
+			hasPap = wep:HasNZModifier("pap")
+		elseif replacementName and activator:HasWeapon(replacementName) then
+			hasReplacement = true
+			wep = activator:GetWeapon(replacementName)
+		end
+		
+		if !hasWep and !hasReplacement then
 			activator:Buy(price, self, function()
 			
 				local wep = activator:Give(self.WeaponGive)
@@ -263,38 +257,51 @@ if SERVER then
 				self:SetBought(true)
 				return true
 			end)
-			
-		elseif string.lower(ammo_type) != "none" and ammo_type != -1 then
-			print("Refilling ammo")
-			local wep = activator:GetWeapon(self.WeaponGive)
-			if (!IsValid(wep) and IsValid(replacementWep)) then
-				wep = replacementWep
-			end
-
-			if replacementWep != nil or wep:HasNZModifier("pap") then
-				activator:Buy(ammo_price_pap, self, function()
-					if give_ammo != 0 then
-						wep:GiveMaxAmmo()
-						return true
-					else
-						print("Max Clip!")
-						return false -- Didn't work, don't take points!
-					end
-				end)
-			else	-- Refill ammo
-				activator:Buy(ammo_price, self, function()
-					if give_ammo != 0 then
-						wep:GiveMaxAmmo()
-						return true
-					else
-						print("Max Clip!")
-						return false
-					end
-				end)
-			end
-			
+			return
 		end
-		return
+		
+		local ammo_type = game.GetAmmoID(wep.Primary.Ammo)
+		if wep.NZSpecialCategory != nil then
+			ammo_type = GetNZAmmoID(wep.NZSpecialCategory) or -1
+		end
+		
+		if ammo_type == -1 then return end
+		
+		
+		local ammo_price = 4500
+		if !hasPap and !hasReplacement then
+			ammo_price = math.ceil((price - (price % 10))/2)
+		end
+		
+		local curr_ammo = activator:GetAmmoCount( ammo_type )
+		
+		local give_ammo = 0
+		if wep.NZSpecialWeaponData != nil then
+			give_ammo = (wep.NZSpecialWeaponData.MaxAmmo or 0) - curr_ammo
+		elseif hasReplacement then
+			give_ammo = nzWeps:CalculateMaxAmmo(replacementName) - curr_ammo
+		else
+			give_ammo = nzWeps:CalculateMaxAmmo(self.WeaponGive) - curr_ammo
+		end
+
+		if (wep.NZSpecialCategory == "grenade") then 
+			--local nade = activator:GetSpecialWeaponFromCategory("grenade")
+			if activator:HasPerk("widowswine") then
+				ammo_price = 4000
+			end
+		end
+		
+		print("Refilling ammo:", give_ammo)
+		activator:Buy(ammo_price, self, function()
+			if give_ammo > 0 then
+				wep:GiveMaxAmmo()
+				return true
+			else
+				print("Already have max clip!")
+				return false
+			end
+		end)
+		
 	end
 end
 
