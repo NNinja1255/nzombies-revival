@@ -6,27 +6,42 @@ local traceents = {
 		local price = ent:GetPrice()
 		local wep = weapons.Get(wepclass)
 		if !wep then return "INVALID WEAPON" end
-		local name = wep.PrintName
-		local ammo_price = math.Round((price - (price % 10))/2)
-		local ammo_type = wep.Primary.Ammo
-		if wep.NZSpecialWeaponData and wep.NZSpecialWeaponData.MaxAmmo then
-			ammo_type = wep.NZSpecialCategory
-		end
-		local text = ""
-
-		if !LocalPlayer():HasWeapon( wepclass ) then
-			text = "Press E to buy " .. name .." (Cost: " .. price .. ")"
-		elseif ammo_type != "none" then
-			if LocalPlayer():GetWeapon( wepclass ):HasNZModifier("pap") then
-				text = "Press E to refill upgraded " .. ammo_type .." ammunition (Cost: " .. 4500 .. ")"
-			else
-				text = "Press E to refill " .. ammo_type .." ammunition (Cost: " .. ammo_price .. ")"
+		
+		if LocalPlayer():HasWeapon(wepclass) then
+			local ammo_type = wep.Primary.Ammo
+			if wep.NZSpecialWeaponData and wep.NZSpecialWeaponData.MaxAmmo then
+				ammo_type = wep.NZSpecialCategory
 			end
-		else
-			text = "You already have this weapon"
+			
+			if ammo_type == "none" then
+				return "You already have this weapon"
+			end
+			
+			if LocalPlayer():GetWeapon( wepclass ):HasNZModifier("pap") then
+				return "Press E to refill upgraded " .. ammo_type .." ammunition (Cost: 4500)"
+			end
+			
+			return "Press E to refill " .. ammo_type .." ammunition (Cost: " .. math.Round((price - (price % 10))/2) .. ")"
 		end
-
-		return text
+		
+		local replacementName = wep.NZPaPReplacement
+		
+		if replacementName and LocalPlayer():HasWeapon(replacementName) then
+			wep = weapons.Get(replacementName)
+			
+			local ammo_type = wep.Primary.Ammo
+			if wep.NZSpecialWeaponData and wep.NZSpecialWeaponData.MaxAmmo then
+				ammo_type = wep.NZSpecialCategory
+			end
+			
+			if ammo_type == "none" then
+				return "You already have this weapon"
+			end
+			
+			return "Press E to refill upgraded " .. ammo_type .." ammunition (Cost: 4500)"
+		end
+		
+		return "Press E to buy " .. wep.PrintName .." (Cost: " .. price .. ")"
 	end,
 	["breakable_entry"] = function(ent)
 		if ent:GetHasPlanks() and ent:GetNumPlanks() < GetConVar("nz_difficulty_barricade_planks_max"):GetInt() then
