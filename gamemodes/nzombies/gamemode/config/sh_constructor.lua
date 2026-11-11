@@ -27,22 +27,16 @@ if not ConVarExists("nz_rtv_enabled") then CreateConVar("nz_rtv_enabled", 0, {FC
 -- Zombie table - Moved to shared area for client collision prediction (barricades)
 nzConfig.ValidEnemies = {
 	["nz_zombie_walker"] = {
-		-- Set to false to disable the spawning of this zombie
 		Valid = true,
-		-- Allow you to scale damage on a per-hitgroup basis
 		ScaleDMG = function(zombie, hitgroup, dmginfo)
-			-- Headshots for double damage
 			if hitgroup == HITGROUP_HEAD then dmginfo:ScaleDamage(2) end
 		end,
-		-- Function runs whenever the zombie is damaged (NOT when killed)
 		OnHit = function(zombie, dmginfo, hitgroup)
 			local attacker = dmginfo:GetAttacker()
-			-- If player is playing and is not downed, give points
 			if attacker:IsPlayer() and attacker:GetNotDowned() then
 				attacker:GivePoints(10)
 			end
 		end,
-		-- Function is run whenever the zombie is killed
 		OnKilled = function(zombie, dmginfo, hitgroup)
 			local attacker = dmginfo:GetAttacker()
 			if attacker:IsPlayer() and attacker:GetNotDowned() then
@@ -106,6 +100,56 @@ nzConfig.ValidEnemies = {
 		end
 	},
 }
+
+-- How to load your own custom zombies (using autorun):
+--[[
+local nzname = "nz_zombie_walker_custom_"
+
+hook.Add("Initialize", nzname .. "Initialize1", function()   
+	if engine.ActiveGamemode() != "nzombies" then return end  
+    nzEnemies:AddValidZombieType("nz_zombie_walker_custom")
+end)
+
+hook.Add("Initialize", nzname .. "Initialize2", function()
+	if engine.ActiveGamemode() != "nzombies" then return end
+    nzConfig.ValidEnemies["nz_zombie_walker_custom"] = {
+		-- Set to false to disable the spawning of this zombie
+		Valid = true,
+		-- Allow you to scale damage on a per-hitgroup basis
+		ScaleDMG = function(zombie, hitgroup, dmginfo)
+			-- Headshots for double damage
+			if hitgroup == HITGROUP_HEAD then dmginfo:ScaleDamage(2) end
+		end,
+		-- Function runs whenever the zombie is damaged (NOT when killed)
+		OnHit = function(zombie, dmginfo, hitgroup)
+			local attacker = dmginfo:GetAttacker()
+			-- If player is playing and is not downed, give points
+			if attacker:IsPlayer() and attacker:GetNotDowned() then
+				attacker:GivePoints(10)
+			end
+		end,
+		-- Function is run whenever the zombie is killed
+		OnKilled = function(zombie, dmginfo, hitgroup)
+			local attacker = dmginfo:GetAttacker()
+			if attacker:IsPlayer() and attacker:GetNotDowned() then
+				if dmginfo:GetDamageType() == DMG_CLUB then
+					attacker:GivePoints(130)
+				elseif hitgroup == HITGROUP_HEAD then
+					attacker:GivePoints(100)
+				else
+					attacker:GivePoints(50)
+				end
+			end
+		end
+    }
+end)
+
+hook.Add("PostGamemodeLoaded", nzname .. "PostGamemodeLoaded1", function()
+	if engine.ActiveGamemode() != "nzombies" then return end
+    nzRound:AddZombieType("Custom Walker", "nz_zombie_walker_custom", {})
+end)
+]]
+
 
 -- Random Box
 
