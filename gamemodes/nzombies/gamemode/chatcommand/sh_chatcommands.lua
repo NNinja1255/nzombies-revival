@@ -25,6 +25,22 @@ nzChatCommand.Add("/fixme", SERVER, function(ply, text) -- From nZR
 	end
 end, true, "Fixes your player.")
 
+nzChatCommand.Add("/fixbarricades", SERVER, function(ply, text) -- From nZR but does the opposite direction
+	if IsValid(ply) and ply:IsAdmin() then
+		for k, v in pairs(ents.FindByClass("breakable_entry")) do
+			v:SetPos(v:GetPos() + Vector(0,0,45))
+		end
+	end
+end, false, "Fixes the positions on ALL the barricades if they're using the rezzurrection ones.")
+
+nzChatCommand.Add("/revertbarricades", SERVER, function(ply, text) -- From nZR but does the opposite direction
+	if IsValid(ply) and ply:IsAdmin() then
+		for k, v in pairs(ents.FindByClass("breakable_entry")) do
+			v:SetPos(v:GetPos() - Vector(0,0,45))
+		end
+	end
+end, false, "Reverts barricade's positions back to the original ones.")
+
 nzChatCommand.Add("/help", SERVER, function(ply, text)
 	ply:PrintMessage( HUD_PRINTTALK, "-----" )
 	ply:PrintMessage( HUD_PRINTTALK, "[nZ] Available commands:" )

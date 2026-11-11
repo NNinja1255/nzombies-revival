@@ -273,7 +273,13 @@ nzMapping:AddSaveModule("PerkMachineSpawns", {
 	end,
 	loadfunc = function(data)
 		for k,v in pairs(data) do
-			nzMapping:PerkMachine(v.pos, v.angle, v.id)
+			if istable(v) then
+                local id = v.id
+                if id == nil and v.tab and isstring(v.tab.id) then
+                    v.id = v.tab.id
+                end
+				nzMapping:PerkMachine(v.pos, v.angle, v.id)
+			end
 		end
 	end,
 	cleanents = {"perk_machine", "wunderfizz_machine", "wunderfizz_windup"},

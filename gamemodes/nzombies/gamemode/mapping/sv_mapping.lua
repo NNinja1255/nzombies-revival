@@ -245,7 +245,7 @@ function nzMapping:PerkMachine(pos, ang, id, ply)
 		local perkData = nzPerks:Get(id)
 
 		local perk = ents.Create("perk_machine")
-		perk:SetPerkID(id)
+		perk:SetPerkID(id or "Unknown")
 		perk:TurnOff()
 		perk:SetPos(pos)
 		perk:SetAngles(ang)

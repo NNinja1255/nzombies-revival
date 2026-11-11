@@ -40,6 +40,10 @@ function ENT:Initialize()
 		self:SetUseType( SIMPLE_USE )
 		self:SetBeingUsed(false)
 		local PerkData = nzPerks:Get(self:GetPerkID())
+		if not PerkData then
+		    self:Remove()
+			return
+		end
 		self:SetPrice(PerkData.price)
 	end
 end
@@ -56,7 +60,7 @@ end
 
 function ENT:Update()
 	local PerkData = nzPerks:Get(self:GetPerkID())
-	local skinmodel = PerkData.model
+	local skinmodel = (PerkData and PerkData.model)
 	if skinmodel then
 		self:SetModel(skinmodel)
 		if self:IsOn() then
@@ -78,10 +82,10 @@ local MachinesNoDrink = {
 }
 
 function ENT:Use(activator, caller)
-	local PerkData = nzPerks:Get(self:GetPerkID())
+	local PerkData = nzPerks:Get(self:GetPerkID()) or {}
 	
 	if self:IsOn() then
-		local price = self:GetPrice()
+		local price = self:GetPrice() or 0
 		-- As long as they have less than the max perks, unless it's pap
 		if #activator:GetPerks() < activator:GetPerkLimit() or self:GetPerkID() == "pap" then
 			-- If they have enough money
