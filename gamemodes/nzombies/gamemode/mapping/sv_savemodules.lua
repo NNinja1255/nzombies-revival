@@ -274,11 +274,13 @@ nzMapping:AddSaveModule("PerkMachineSpawns", {
 	loadfunc = function(data)
 		for k,v in pairs(data) do
 			if istable(v) then
-                local id = v.id
-                if id == nil and v.tab and isstring(v.tab.id) then
-                    v.id = v.tab.id
+                local id
+                if v.id == nil and v.tab and isstring(v.tab.id) then
+                    id = v.tab.id
+				else
+					id = v.id
                 end
-				nzMapping:PerkMachine(v.pos, v.angle, v.id)
+				nzMapping:PerkMachine(v.pos, v.angle, id)
 			end
 		end
 	end,
