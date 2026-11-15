@@ -538,6 +538,11 @@ end
 
 function nzRound:Create(on)
 	if on then
+		if not self:InState( ROUND_WAITING ) and (nzMapping:CheckSpawns() == false or nzMapping:CheckEnoughPlayerSpawns() == false) then
+			ErrorNoHalt("A softlock condition has been prevented (no spawners & round state not waiting). This should never happen.\n")
+			self:SetState( ROUND_WAITING )
+		end
+	
 		if self:InState( ROUND_WAITING ) then
 			PrintMessage( HUD_PRINTTALK, "The mode has been set to creative mode!" )
 			self:SetState( ROUND_CREATE )
