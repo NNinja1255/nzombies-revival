@@ -143,11 +143,6 @@ hook.Add("Initialize", nzname .. "Initialize2", function()
 		end
     }
 end)
-
-hook.Add("PostGamemodeLoaded", nzname .. "PostGamemodeLoaded1", function()
-	if engine.ActiveGamemode() != "nzombies" then return end
-    nzRound:AddZombieType("Custom Walker", "nz_zombie_walker_custom", {})
-end)
 ]]
 
 
