@@ -255,6 +255,9 @@ CreateMismatchCheck("Map Settings", function()
 	local startwep = settings.startwep or nzConfig.BaseStartingWeapons[1] or "Invalid"
 	if !weapons.Get(startwep) then tbl["startwep"] = startwep end
 	
+	local zombie = settings.zombietype
+	if !nzConfig.ValidEnemies[zombie] and zombie != "nz_zombie_walker" and zombie != nil then tbl["zombietype"] = zombie end
+	
 	local specialround = settings.specialroundtype
 	if !nzRound.SpecialData[specialround] and specialround != "None" and specialround != nil then tbl["specialroundtype"] = specialround end
 	
@@ -283,6 +286,17 @@ CreateMismatchCheck("Map Settings", function()
 			end
 			choice.DataChanged = function(self, val)
 				nzMapping.MismatchData["Map Settings"]["startwep"] = val
+			end
+		end
+		if tbl.zombietype then
+			local choice = properties:CreateRow( "Zombie Type", tbl.zombietype )
+			choice:Setup( "Combo", {} )
+			for k,v in pairs(nzRound.SpecialData) do
+				choice:AddChoice(k, k, false)
+			end
+			nzMapping.MismatchData["Map Settings"]["zombietype"] = "nz_zombie_walker" -- Default
+			choice.DataChanged = function(self, val)
+				nzMapping.MismatchData["Map Settings"]["zombietype"] = val
 			end
 		end
 		if tbl.specialroundtype then
@@ -324,6 +338,9 @@ CreateMismatchCheck("Map Settings", function()
 
 		if data.startwep then
 			nzMapping.Settings.startwep = data.startwep
+		end
+		if data.zombietype then
+			nzMapping.Settings.zombietype = data.zombietype
 		end
 		if data.specialroundtype then
 			nzMapping.Settings.specialroundtype = data.specialroundtype

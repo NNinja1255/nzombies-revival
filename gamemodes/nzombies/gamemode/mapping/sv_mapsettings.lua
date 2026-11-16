@@ -50,6 +50,9 @@ function nzMapping:LoadMapSettings(data)
 	if data.gamemodeentities then
 		nzMapping.Settings.gamemodeentities = data.gamemodeentities or nil
 	end
+	if data.zombietype then
+		nzMapping.Settings.zombietype = data.zombietype or "nz_zombie_walker"
+	end
 	if data.specialroundtype then
 		nzMapping.Settings.specialroundtype = data.specialroundtype or "Hellhounds"
 	end

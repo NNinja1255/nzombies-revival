@@ -148,7 +148,7 @@ function nzRound:Prepare( time )
 	-- Woah ... spooky round O_o
 	elseif self:GetNumber() == -1 then
 		
-		local normalrounddata = {["nz_zombie_walker"] = {chance = 100}}
+		local normalrounddata = {[nzMapping.Settings.zombietype] = {chance = 100}}
 		local specialrounddata = {}
 		
 		for k,v in pairs(nzRound.SpecialData) do
@@ -189,7 +189,7 @@ function nzRound:Prepare( time )
 
 	-- else just do regular walker spawning
 	else
-		local normalSpawner = Spawner("nz_spawn_zombie_normal", {["nz_zombie_walker"] = {chance = 100}}, self:GetZombiesMax())
+		local normalSpawner = Spawner("nz_spawn_zombie_normal", {[nzMapping.Settings.zombietype] = {chance = 100}}, self:GetZombiesMax())
 
 		--[[
 		-- after round 20 spawn some hellhounds aswell (half of the round number 21: 10, 22: 11, 23: 11, 24: 12 ...)

@@ -4,7 +4,7 @@ nzRound = nzRound or AddNZModule("Round")
 if SERVER then
 
 	nzConfig.RoundData = {}
-	--nzConfig.RoundData[1] = {["nz_zombie_walker"] = 100}
+	--nzConfig.RoundData[1] = {[nzMapping.Settings.zombietype] = 100}
 
 	--[[
 	-- EXAMPLE of a round zombie config:
@@ -44,35 +44,35 @@ if SERVER then
 	--[[
 	nzConfig.RoundData[1] = {
 		normalTypes = {
-			["nz_zombie_walker"] = {
+			[nzMapping.Settings.zombietype] = {
 				chance = 100,
 			},
 		},
 	}
 	nzConfig.RoundData[2] = {
 		normalTypes = {
-			["nz_zombie_walker"] = {
+			[nzMapping.Settings.zombietype] = {
 				chance = 100,
 			},
 		},
 	}
 	nzConfig.RoundData[13] = {
 		normalTypes = {
-			["nz_zombie_walker"] = {
+			[nzMapping.Settings.zombietype] = {
 				chance = 100,
 			},
 		},
 	}
 	nzConfig.RoundData[14] = {
 		normalTypes = {
-			["nz_zombie_walker"] = {
+			[nzMapping.Settings.zombietype] = {
 				chance = 100,
 			},
 		},
 	}
 	nzConfig.RoundData[23] = {
 		normalTypes = {
-			["nz_zombie_walker"] = {
+			[nzMapping.Settings.zombietype] = {
 				chance = 100,
 			},
 		},

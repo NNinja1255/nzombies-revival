@@ -34,16 +34,26 @@ nzTools:CreateTool("settings", {
 		valz["Row6"] = data.gamemodeentities or false
 		valz["Row7"] = data.specialroundtype or "Hellhounds"
 		valz["Row8"] = data.bosstype or "Panzer"
+		valz["Row9"] = data.zombietype or "nz_zombie_walker"
 		valz["RBoxWeps"] = data.RBoxWeps or {}
 
 		local sheet = vgui.Create( "DPropertySheet", frame )
 		sheet:SetSize( 280, 250 )
 		sheet:SetPos( 10, 10 )
+		
+		local propertiespanel = vgui.Create("DPanel", sheet)
+		sheet:AddSheet( "Map Properties", propertiespanel, "icon16/cog.png", false, false, "Allows you to set a list of general settings. The Easter Egg Song URL needs to be from Soundcloud.")
+		propertiespanel.Paint = function() return end
 
-		local DProperties = vgui.Create( "DProperties", DProperySheet )
-		DProperties:SetSize( 280, 250 )
+		local propertieslist = vgui.Create("DScrollPanel", propertiespanel)
+		propertieslist:SetPos(0, 0)
+		propertieslist:SetSize(265, 175)
+		propertieslist:SetPaintBackground(true)
+		propertieslist:SetBackgroundColor( Color(200, 200, 200) )
+		
+		local DProperties = vgui.Create( "DProperties", propertieslist )
+		DProperties:SetSize( 265, 250 )
 		DProperties:SetPos( 0, 0 )
-		sheet:AddSheet( "Map Properties", DProperties, "icon16/cog.png", false, false, "Allows you to set a list of general settings. The Easter Egg Song URL needs to be from Soundcloud.")
 
 		local Row1 = DProperties:CreateRow( "Map Settings", "Starting Weapon" )
 		Row1:Setup( "Combo" )
@@ -128,6 +138,20 @@ nzTools:CreateTool("settings", {
 			Row8.DataChanged = function( _, val ) valz["Row8"] = val end
 			Row8:SetTooltip("Sets what type of boss will appear.")
 			
+			local Row9 = DProperties:CreateRow("Map Settings", "Zombie Type")
+			Row9:Setup( "Combo" )
+			local found = false
+			for k,v in pairs(nzConfig.ValidEnemies) do
+				if k == valz["Row9"] then
+					Row9:AddChoice(k, k, true)
+					found = true
+				else
+					Row9:AddChoice(k, k, false)
+				end
+			end
+			Row9.DataChanged = function( _, val ) valz["Row9"] = val end
+			Row9:SetTooltip("Sets the zombies that will appear in your map.")
+			
 		end
 		
 		local function UpdateData() -- Will remain a local function here. There is no need for the context menu to intercept
@@ -139,6 +163,7 @@ nzTools:CreateTool("settings", {
 			if !valz["Row6"] or valz["Row6"] == "0" then data.gamemodeentities = nil else data.gamemodeentities = tobool(valz["Row6"]) end
 			if !valz["Row7"] then data.specialroundtype = "Hellhounds" else data.specialroundtype = valz["Row7"] end
 			if !valz["Row8"] then data.bosstype = "Panzer" else data.bosstype = valz["Row8"] end
+			if !valz["Row9"] then data.zombietype = "nz_zombie_walker" else data.zombietype = valz["Row9"] end
 			if !valz["RBoxWeps"] or table.Count(valz["RBoxWeps"]) < 1 then data.rboxweps = nil else data.rboxweps = valz["RBoxWeps"] end
 			if !valz["WMPerks"] or !valz["WMPerks"][1] then data.wunderfizzperks = nil else data.wunderfizzperks = valz["WMPerks"] end
 			PrintTable(data)
@@ -146,7 +171,7 @@ nzTools:CreateTool("settings", {
 			nzMapping:SendMapData( data )
 		end
 
-		local DermaButton = vgui.Create( "DButton", DProperties )
+		local DermaButton = vgui.Create( "DButton", propertiespanel )
 		DermaButton:SetText( "Submit" )
 		DermaButton:SetPos( 0, 185 )
 		DermaButton:SetSize( 260, 30 )
