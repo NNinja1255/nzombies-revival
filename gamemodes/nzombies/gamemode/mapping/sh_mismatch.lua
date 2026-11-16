@@ -291,7 +291,7 @@ CreateMismatchCheck("Map Settings", function()
 		if tbl.zombietype then
 			local choice = properties:CreateRow( "Zombie Type", tbl.zombietype )
 			choice:Setup( "Combo", {} )
-			for k,v in pairs(nzRound.SpecialData) do
+			for k,v in pairs(nzConfig.ValidEnemies) do
 				choice:AddChoice(k, k, false)
 			end
 			nzMapping.MismatchData["Map Settings"]["zombietype"] = "nz_zombie_walker" -- Default
