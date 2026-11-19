@@ -33,7 +33,7 @@ nzTools:CreateTool("settings", {
 		valz["Row5"] = data.scriptinfo or ""
 		valz["Row6"] = data.gamemodeentities or false
 		valz["Row7"] = data.specialroundtype or "Hellhounds"
-		valz["Row8"] = data.bosstype or "Panzer"
+		valz["Row8"] = data.bosstype or "None"
 		valz["Row9"] = data.zombietype or "nz_zombie_walker"
 		valz["RBoxWeps"] = data.RBoxWeps or {}
 
@@ -162,7 +162,7 @@ nzTools:CreateTool("settings", {
 			if !valz["Row5"] or valz["Row5"] == "" then data.scriptinfo = nil else data.scriptinfo = valz["Row5"] end
 			if !valz["Row6"] or valz["Row6"] == "0" then data.gamemodeentities = nil else data.gamemodeentities = tobool(valz["Row6"]) end
 			if !valz["Row7"] then data.specialroundtype = "Hellhounds" else data.specialroundtype = valz["Row7"] end
-			if !valz["Row8"] then data.bosstype = "Panzer" else data.bosstype = valz["Row8"] end
+			if !valz["Row8"] then data.bosstype = "None" else data.bosstype = valz["Row8"] end
 			if !valz["Row9"] then data.zombietype = "nz_zombie_walker" else data.zombietype = valz["Row9"] end
 			if !valz["RBoxWeps"] or table.Count(valz["RBoxWeps"]) < 1 then data.rboxweps = nil else data.rboxweps = valz["RBoxWeps"] end
 			if !valz["WMPerks"] or !valz["WMPerks"][1] then data.wunderfizzperks = nil else data.wunderfizzperks = valz["WMPerks"] end

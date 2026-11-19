@@ -57,7 +57,7 @@ function nzMapping:LoadMapSettings(data)
 		nzMapping.Settings.specialroundtype = data.specialroundtype or "Hellhounds"
 	end
 	if data.bosstype then
-		nzMapping.Settings.bosstype = data.bosstype or "Panzer"
+		nzMapping.Settings.bosstype = data.bosstype or "None"
 	end
 
 	nzMapping:SendMapData()

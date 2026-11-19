@@ -24,7 +24,7 @@ if SERVER then
 		if id == "None" then
 			self.BossType = nil -- "None" makes a nil key
 		else
-			self.BossType = id or "Panzer" -- A nil id defaults to "Panzer", otherwise id
+			self.BossType = id
 		end
 	end
 	
